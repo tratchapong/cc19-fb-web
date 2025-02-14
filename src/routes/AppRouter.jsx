@@ -1,18 +1,19 @@
 import {createBrowserRouter, Navigate, Outlet, RouterProvider} from 'react-router'
+import App from '../App'
+import Login from '../pages/Login'
+import Friends from '../pages/Friends'
 
 const guestRouter = createBrowserRouter([
-	{ path : '/', element : <p>Login</p> },
+	{ path : '/', element : <Login /> },
 	{ path : '*', element : <Navigate to='/' />}
 ])
 
 const userRouter = createBrowserRouter([
-	{ path : '/', element : <>
-		<p>Header</p>
-		<Outlet />
-	</>,
+	{ path : '/', element : <App />,
 		children : [
-			{ path : '', element: <p>Sidebar + Posts</p>},
-			{ path : 'friends', element : <p>Friends Page</p>},
+			// { path : '', element: <p>Sidebar + Posts</p>},
+			{ index: true, element: <p>Sidebar + Posts</p>},
+			{ path : 'friends', element : <Friends />},
 			{ path : '*', element : <Navigate to='/' />}
 		]
 	},
