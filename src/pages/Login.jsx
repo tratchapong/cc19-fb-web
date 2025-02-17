@@ -1,8 +1,37 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FacebookTitle } from '../icons'
 import Register from './Register'
+import { toast } from 'react-toastify'
+import axios from 'axios'
 
 function Login() {
+	const [input,setInput] = useState({
+		identity : '',
+		password: ''
+	})
+
+	const hdlChange = e => {
+		setInput( prv => ({...prv, [e.target.name] : e.target.value}))
+	}
+
+	const hdlLogin = async e => {
+	try {
+		const {identity, password} = input
+		e.preventDefault()
+		// validation
+		if(!identity.trim() || !password.trim()) {
+			return toast.error('Please fiil all inputs')
+		}
+		const rs = await axios.post('http://localhost:8899/auth/login', input)
+		toast.success(`Login successful, welcome ${rs.data.user.firstName}`)
+	}catch(err) {
+		const errMsg = err.response?.data?.error || err.message
+		console.log(err)
+		toast.error(errMsg)
+	}
+
+
+	}
 	return (
 		<>
 			<div className="h-[700px] pt-20 pb-28 bg-[#f2f4f7]">
@@ -21,17 +50,23 @@ function Login() {
 					</div>
 					<div className="flex flex-1">
 						<div className="card bg-base-100 w-full h-[350px] shadow-xl mt-8">
-							<form>
+							<form onSubmit={hdlLogin}>
 								<div className="card-body gap-3 p-4">
 									<input
 										type="text"
 										className='input input-bordered w-full'
 										placeholder='E-mail or Phone number'
+										name='identity'
+										value={input.identity}
+										onChange={hdlChange}
 									/>
 									<input
 										type="password"
 										className='input input-bordered w-full'
 										placeholder='password'
+										name='password'
+										value={input.password}
+										onChange={hdlChange}
 									/>
 									<button className='btn btn-primary text-xl'>Login</button>
 									<p className="text-center cursor-pointer opacity-70">

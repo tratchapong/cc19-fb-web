@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { toast } from 'react-toastify'
+import axios from 'axios'
 
 const initInput = {
 	firstName: '',
@@ -21,17 +22,30 @@ function Register() {
 	 setInput(initInput)
 	}
 
-	const hdlRegister = e => {
-		const {firstName, lastName, identity, password, confirmPassword} = input
-		e.preventDefault()
-		//validation
-		if(!firstName.trim() || !lastName.trim() || !identity.trim() || !password.trim()) {
-			return toast.error('Please fill all inputs')
+	const hdlRegister = async e => {
+		try	{
+			const {firstName, lastName, identity, password, confirmPassword} = input
+			e.preventDefault()
+			// ** validation
+			if(!firstName.trim() || !lastName.trim() || !identity.trim() || !password.trim()) {
+				return toast.error('Please fill all inputs')
+			}
+			if(password !== confirmPassword) {
+				return toast('Password and Confirm password unmatched!!')
+			}
+			// toast.success(JSON.stringify(input), {position : 'top-center'})
+	
+			// ** send request to backend
+			const rs = await axios.post('http://localhost:8899/auth/register', input)
+
+			hdlClearInput()
+			document.getElementById('register-form').close()
+			toast('Register successful')
+		}catch(err) {
+			console.log(err)
+			const errMsg = err.response?.data?.error || err.message
+			toast.error(errMsg)
 		}
-		if(password !== confirmPassword) {
-			return toast('Password and Confirm password unmatched!!')
-		}
-		toast.success('ok', {position : 'top-center'})
 	}
 
 	return (

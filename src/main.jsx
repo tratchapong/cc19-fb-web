@@ -8,8 +8,7 @@ createRoot(document.getElementById('root')).render(
   <>
     <AppRouter />
     <ToastContainer 
-      position="bottom-center"
+      position="top-center"
     />
   </>
-
 )
