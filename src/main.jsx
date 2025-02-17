@@ -9,6 +9,7 @@ createRoot(document.getElementById('root')).render(
     <AppRouter />
     <ToastContainer 
       position="top-center"
+      style={{ zIndex: 9999 }}
     />
   </>
 )
