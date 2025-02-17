@@ -2,6 +2,7 @@ import {createBrowserRouter, Navigate, Outlet, RouterProvider} from 'react-route
 import App from '../App'
 import Login from '../pages/Login'
 import Friends from '../pages/Friends'
+import useUserStore from '../stores/userStore'
 
 const guestRouter = createBrowserRouter([
 	{ path : '/', element : <Login /> },
@@ -20,9 +21,9 @@ const userRouter = createBrowserRouter([
 ])
 
 export default function AppRouter() {
-	const user = null
+	const user = useUserStore(state => state.user)
 	const finalRouter = user ? userRouter : guestRouter
 	return (
-		<RouterProvider router={finalRouter}/>
+		<RouterProvider key={user?.id} router={finalRouter}/>
 	)
 }

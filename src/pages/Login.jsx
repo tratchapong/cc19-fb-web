@@ -2,13 +2,10 @@ import React, { useState } from 'react'
 import { FacebookTitle } from '../icons'
 import Register from './Register'
 import { toast } from 'react-toastify'
-import axios from 'axios'
 import useUserStore from '../stores/userStore'
 
 function Login() {
-	const user = useUserStore(state => state.user)
 	const login = useUserStore( state => state.login)
-	const token = useUserStore( state => state.token)
 	const [input,setInput] = useState({
 		identity : '',
 		password: ''
@@ -25,10 +22,9 @@ function Login() {
 		e.preventDefault()
 		// validation
 		if(!identity.trim() || !password.trim()) {
-			return toast.error('Please fiil all inputs')
+			return toast.error('Please fill all inputs')
 		}
 		let data = await login(input)
-		console.log(data.token)
 		toast.success('Login successful')
 	}catch(err) {
 		const errMsg = err.response?.data?.error || err.message
@@ -43,14 +39,13 @@ function Login() {
 				<div className="p-5 mx-auto max-w-screen-lg min-h-[540px] flex justify-between  ">
 					<div className="flex flex-col gap-4 mt-20 basis-3/5">
 						<div className="text-4xl">
-							<FacebookTitle className="-ms-3" /> {user?.firstName}
+							<FacebookTitle className="-ms-3" /> 
 							<h2 className='text-[30px] leading-8 mt-3 w-[514px] '>
 								Fakebook helps you connect and share with the people.
 							</h2>
 							<p className="text-sm text-red-500">
 								*** This is not real Facebook site ***
 							</p>
-							<p className=' text-sm w-[300px]'>{token}</p>
 						</div>
 
 					</div>
