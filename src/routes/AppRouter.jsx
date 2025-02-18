@@ -3,6 +3,7 @@ import App from '../App'
 import Login from '../pages/Login'
 import Friends from '../pages/Friends'
 import useUserStore from '../stores/userStore'
+import Profile from '../pages/Profile'
 
 const guestRouter = createBrowserRouter([
 	{ path : '/', element : <Login /> },
@@ -15,6 +16,7 @@ const userRouter = createBrowserRouter([
 			// { path : '', element: <p>Sidebar + Posts</p>},
 			{ index: true, element: <p>Sidebar + Posts</p>},
 			{ path : 'friends', element : <Friends />},
+			{ path : 'profile', element : <Profile />},
 			{ path : '*', element : <Navigate to='/' />}
 		]
 	},

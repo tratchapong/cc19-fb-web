@@ -2,6 +2,7 @@ import React from 'react'
 import { FacebookLogo, FriendsIcon, HomeIcon, MarketIcon, MenuIcon, MessengerIcon, NotificationIcon, PlayIcon, SearchIcon } from '../icons'
 import useUserStore from '../stores/userStore'
 import Avatar from './Avatar'
+import { Link } from 'react-router'
 
 function Header() {
 	const logout = useUserStore(state => state.logout)
@@ -19,18 +20,22 @@ function Header() {
 			</div>
 			{/* Center icon menu */}
 			<div className='flex-1 flex gap-2 justify-center '>
-				<div className="flex justify-center w-20 hover:border-b-2 hover:border-blue-900">
+				<Link 
+					to = '/'
+					className="flex justify-center w-20 hover:border-b-2 hover:border-blue-900">
 					<HomeIcon className='w-1/2' />
-				</div>
+				</Link>
 				<div className="flex justify-center w-20 hover:border-b-2 hover:border-blue-900">
 					<PlayIcon className='w-1/2' />
 				</div>
 				<div className="flex justify-center w-20 hover:border-b-2 hover:border-blue-900">
 					<MarketIcon className='w-1/2 opacity-80' fill="#050505" />
 				</div>
-				<div className="flex justify-center w-20 hover:border-b-2 hover:border-blue-900">
+				<Link 
+					to = '/friends'
+					className="flex justify-center w-20 hover:border-b-2 hover:border-blue-900">
 					<FriendsIcon className='w-2/3' />
-				</div>
+				</Link>
 			</div>
 			{/* Right menu + drop down */}
 			<div className='flex-1 flex gap-3 justify-end '>
@@ -61,7 +66,7 @@ function Header() {
 						/>
 					</div>
 					<ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-						<li><a>Profile</a></li>
+						<li><Link to='/profile'>Profile</Link></li>
 						<div className="divider my-0"></div>
 						<li onClick={logout} ><a>Logout</a></li>
 					</ul>
