@@ -1,9 +1,12 @@
 import React from 'react'
 import { FacebookLogo, FriendsIcon, HomeIcon, MarketIcon, MenuIcon, MessengerIcon, NotificationIcon, PlayIcon, SearchIcon } from '../icons'
 import useUserStore from '../stores/userStore'
+import Avatar from './Avatar'
 
 function Header() {
 	const logout = useUserStore(state => state.logout)
+	const user = useUserStore(state => state.user)
+	console.log(user)
 	return (
 		<header className='flex justify-between px-3 h-14 w-full shadow-lg bg-white fixed top-0 z-10'>
 			{/* Search bar */}
@@ -50,7 +53,13 @@ function Header() {
 					</div>
 				</div>
 				<div className="dropdown dropdown-end">
-					<div tabIndex={0} role="button" className="btn m-1">Click</div>
+					<div tabIndex={0} role="button" className="btn m-1 btn-circle">
+						<Avatar 
+							className='w-11 h-11 rounded-full bg-slate-400' 
+							menu={true}
+							imgSrc={user.profileImage}
+						/>
+					</div>
 					<ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
 						<li><a>Profile</a></li>
 						<div className="divider my-0"></div>

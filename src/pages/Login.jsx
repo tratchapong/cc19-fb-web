@@ -25,7 +25,7 @@ function Login() {
 			return toast.error('Please fill all inputs')
 		}
 		let data = await login(input)
-		toast.success('Login successful')
+		// toast.success('Login successful')
 	}catch(err) {
 		const errMsg = err.response?.data?.error || err.message
 		console.log(err)
