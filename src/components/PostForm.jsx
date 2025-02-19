@@ -1,10 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Avatar from '../components/Avatar'
 import useUserStore from '../stores/userStore'
 import { PhotoIcon2 } from '../icons'
+import { toast } from 'react-toastify'
+import AddPicture from './AddPicture'
 
 function PostForm() {
 	const user = useUserStore(state=>state.user)
+	const [message, setMessage] = useState('')
+	const [addPic, setAddPic] = useState(false)
+
+	const hdlCreatePost = () => {
+		toast(message)
+	}
+
 	return (
 		<div className='flex flex-col gap-2'>
 			<h3 className="text-xl text-center">Create post</h3>
@@ -24,16 +33,26 @@ function PostForm() {
 			</div>
 			<textarea className='textarea textarea-ghost'
 				placeholder={`what do you think? ${user.firstName}`}
+				value={message}
+				onChange={e=>setMessage(e.target.value)}
+				rows={message.split('\n').length}
 			></textarea>
-
+			{ addPic && 
+				<AddPicture />
+			}
 			<div className="flex border rounded-lg p-2 justify-between items-center">
 				<p>add with your post</p>
 				<div className="flex justify-center items-center w-10 h-10 rounded-full bg-slate-100 
-					hover:bg-slate-200 active:scale-110">
+					hover:bg-slate-200 active:scale-110"
+					onClick={()=>setAddPic(prv=>!prv)}
+				>
 					<PhotoIcon2 className='w-7'/>
 				</div>
 			</div>
-			<button className='btn btn-sm btn-primary'>Create Post</button>
+			<button className='btn btn-sm btn-primary'
+				onClick={hdlCreatePost}	
+				disabled={message.trim().length === 0}
+			>Create Post</button>
 		</div>
 	)
 }
