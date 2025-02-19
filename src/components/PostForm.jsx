@@ -9,9 +9,21 @@ function PostForm() {
 	const user = useUserStore(state=>state.user)
 	const [message, setMessage] = useState('')
 	const [addPic, setAddPic] = useState(false)
+	const [file, setFile] = useState(null)
 
-	const hdlCreatePost = () => {
-		toast(message)
+	const hdlCreatePost = async () => {
+		try {
+			const body = new FormData()
+			body.append('message', message)
+			if(file) {
+				body.append('image', file)
+			}
+			// ยิง api 
+		}catch(err) {
+			const errMsg = err.response?.data?.error || err.message
+			console.log(err)
+			toast.error(errMsg)
+		}
 	}
 
 	return (
@@ -38,7 +50,7 @@ function PostForm() {
 				rows={message.split('\n').length}
 			></textarea>
 			{ addPic && 
-				<AddPicture />
+				<AddPicture file={file} setFile={setFile}  />
 			}
 			<div className="flex border rounded-lg p-2 justify-between items-center">
 				<p>add with your post</p>
@@ -51,7 +63,7 @@ function PostForm() {
 			</div>
 			<button className='btn btn-sm btn-primary'
 				onClick={hdlCreatePost}	
-				disabled={message.trim().length === 0}
+				disabled={message.trim().length === 0 && !file}
 			>Create Post</button>
 		</div>
 	)
