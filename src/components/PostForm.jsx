@@ -6,7 +6,8 @@ import { toast } from 'react-toastify'
 import AddPicture from './AddPicture'
 import usePostStore from '../stores/postStore'
 
-function PostForm() {
+function PostForm(props) {
+	const {closePostForm} = props
 	const user = useUserStore(state=>state.user)
 	const token = useUserStore(state=>state.token)
 	const createPost = usePostStore(state => state.createPost)
@@ -24,6 +25,7 @@ function PostForm() {
 			// ยิง api 
 			await createPost(body, token, user)
 			toast('Create Post done')
+			closePostForm()
 		}catch(err) {
 			const errMsg = err.response?.data?.error || err.message
 			console.log(err)
