@@ -6,7 +6,7 @@ function AddPicture(props) {
 	const hdlFileChange = e => {
 		console.log(e.target.files)
 		setFile(e.target.files[0])
-		console.log(URL.createObjectURL(e.target.files[0]))
+		// console.log(URL.createObjectURL(e.target.files[0]))
 	}
 	return (
 		<div className="flex flex-col p-2 border rounded-lg">
@@ -14,7 +14,7 @@ function AddPicture(props) {
 			rounded-lg relative cursor-pointer'
 				onClick={()=>document.getElementById('input-file').click()}
 			>
-				<input type="file" className='hidden' id='input-file' 
+				<input type="file" className='hidden' id='input-file' multiple
 					onChange={hdlFileChange}
 				/>
 				{ file && 

@@ -4,9 +4,12 @@ import useUserStore from '../stores/userStore'
 import { PhotoIcon2 } from '../icons'
 import { toast } from 'react-toastify'
 import AddPicture from './AddPicture'
+import usePostStore from '../stores/postStore'
 
 function PostForm() {
 	const user = useUserStore(state=>state.user)
+	const token = useUserStore(state=>state.token)
+	const createPost = usePostStore(state => state.createPost)
 	const [message, setMessage] = useState('')
 	const [addPic, setAddPic] = useState(false)
 	const [file, setFile] = useState(null)
@@ -19,6 +22,8 @@ function PostForm() {
 				body.append('image', file)
 			}
 			// ยิง api 
+			await createPost(body, token, user)
+			toast('Create Post done')
 		}catch(err) {
 			const errMsg = err.response?.data?.error || err.message
 			console.log(err)
