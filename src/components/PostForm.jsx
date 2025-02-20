@@ -11,6 +11,7 @@ function PostForm(props) {
 	const user = useUserStore(state=>state.user)
 	const token = useUserStore(state=>state.token)
 	const createPost = usePostStore(state => state.createPost)
+	const getAllPosts = usePostStore(state => state.getAllPosts)
 	const [message, setMessage] = useState('')
 	const [addPic, setAddPic] = useState(false)
 	const [file, setFile] = useState(null)
@@ -26,6 +27,7 @@ function PostForm(props) {
 			await createPost(body, token, user)
 			toast('Create Post done')
 			closePostForm()
+			getAllPosts(token)
 		}catch(err) {
 			const errMsg = err.response?.data?.error || err.message
 			console.log(err)

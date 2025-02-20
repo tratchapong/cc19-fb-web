@@ -6,18 +6,20 @@ import useUserStore from '../stores/userStore'
 
 function PostContainer() {
 	const posts = usePostStore(state => state.posts)
-	const getAllPosts = usePostStore(state=>state.getAllPosts)
-	const token  = useUserStore(state=>state.token)
+	const getAllPosts = usePostStore(state => state.getAllPosts)
+	const token = useUserStore(state => state.token)
 
-	useEffect( ()=>{
+	useEffect(() => {
 		getAllPosts(token)
-	},[])
+	}, [])
 
 	return (
-		<div className='w-[680px] mx-auto min-h-screen my-3 flex flex-col gap-4 rounded-lg bg-red-200'>
+		<div className='w-[680px] mx-auto min-h-screen my-3 flex flex-col gap-4 rounded-lg'>
 			<CreatePost />
-			<pre>{JSON.stringify(posts,null,2)}</pre>
-			<PostItem />
+			{/* <pre>{JSON.stringify(posts, null, 2)}</pre> */}
+			{posts.map(post => (
+				<PostItem key={post.id} post={post} />
+			))}
 		</div>
 	)
 }
