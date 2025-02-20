@@ -12,16 +12,29 @@ function PostFormEdit(props) {
 	const token = useUserStore(state=>state.token)
 
 	const updatePost = usePostStore(state => state.updatePost)
-	const setCurrentPost = usePostStore(state => state.setCurrentPost)
+	const currentPost = usePostStore(state => state.currentPost)
 
 	const getAllPosts = usePostStore(state => state.getAllPosts)
-	const [message, setMessage] = useState('')
+	const [message, setMessage] = useState(currentPost.message)
 	const [addPic, setAddPic] = useState(false)
 	const [file, setFile] = useState(null)
+	const [removePic, setRemovePic] = useState(false)
+
+	// console.log(currentPost)
 
 	const hdlUpdatePost = async () => {
 		try {
-
+			const body = new FormData()
+			body.append('message', message)
+			if(file) {
+				body.append('image', file)
+			}
+			if(removePic) {
+				body.append('removePic', true)
+			}
+			await updatePost(currentPost.id, token, body)
+			getAllPosts(token)
+			document.getElementById('editform-modal').close()
 		}catch(err) {
 			const errMsg = err.response?.data?.error || err.message
 			console.log(err)
@@ -52,10 +65,12 @@ function PostFormEdit(props) {
 				onChange={e=>setMessage(e.target.value)}
 				rows={message.split('\n').length}
 			></textarea>
+			{ currentPost.image && !removePic && (
 			<div className="border flex justify-evenly items-center">
-				<p>Picture show here</p>
-				<button className='btn btn-sm'>Remove</button>
+				<img src={currentPost.image} className='h-[100px] object-contain' />
+				<button className='btn btn-sm' onClick={()=>setRemovePic(true)} >Remove</button>
 			</div>
+			)}
 			{ addPic && 
 				<AddPicture file={file} setFile={setFile}  />
 			}
