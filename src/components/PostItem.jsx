@@ -11,6 +11,7 @@ function PostItem(props) {
 	const token = useUserStore(state=>state.token)
 	const deletePost = usePostStore(state=>state.deletePost)
 	const getAllPosts = usePostStore(state=>state.getAllPosts)
+	const setCurrentPost = usePostStore(state=>state.setCurrentPost)
 	const { post } = props
 	// console.log(post)
 
@@ -18,13 +19,18 @@ function PostItem(props) {
 		try {
 			await deletePost(post.id,token)
 			toast.success('Delete done')
-			getAllPosts(token)
+			// getAllPosts(token)
 		}catch(err){
 			const errMsg = err.response?.data?.error || err.message
 			toast.error(errMsg)
 			console.log(err)
 		}
 	}
+	const hdlShowEditModal = () => {
+		setCurrentPost(post)
+		document.getElementById('editform-modal').showModal()
+	}
+
 	return (
 		<div className="card bg-base-100 shadow-xl">
 			<div className="card-body p-3">
@@ -48,7 +54,7 @@ function PostItem(props) {
 								</div>
 							</div>
 							<ul tabIndex={0} className='dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow'>
-								<li><a>Edit</a></li>
+								<li onClick={hdlShowEditModal}><a>Edit</a></li>
 								<li onClick={hdlDelete}><a>Delete</a></li>
 							</ul>
 						</div>)

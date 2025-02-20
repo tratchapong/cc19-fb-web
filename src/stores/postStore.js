@@ -12,9 +12,7 @@ const usePostStore = create( (set, get)=> ({
 		console.log(rs.data)
 		set(state => ({
 			posts: [ {...rs.data.result, user, likes :[], comments:[]}, ...state.posts ]
-		}))
-	
-		
+		}))	
 	},
 	getAllPosts : async (token) => {
 		set({loading: true})
@@ -27,7 +25,17 @@ const usePostStore = create( (set, get)=> ({
 		const rs = await axios.delete(`http://localhost:8899/post/${postId}`,{
 			headers : { Authorization : `Bearer ${token}`}
 		})
+		set(state=> ({
+			posts : state.posts.filter(post => post.id !== postId)
+		}))  
+	},
+	setCurrentPost : (post) => set({currentPost : post}),
+	updatePost : async (postId, token, body) => {
+		const rs = await axios.put(`http://localhost:8899/post/${postId}`, body,{
+			headers : { Authorization : `Bearer ${token}`}
+		})
 	}
+
 }) )
 
 export default usePostStore
