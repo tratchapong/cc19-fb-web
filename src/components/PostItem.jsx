@@ -2,10 +2,29 @@ import React from 'react'
 import Avatar from './Avatar'
 import { CloseIcon, CommentIcon, LikeIcon, ShareIcon, ThreeDotIcon } from '../icons'
 import CommentContainer from './CommentContainer'
+import useUserStore from '../stores/userStore'
+import usePostStore from '../stores/postStore'
+import { toast } from 'react-toastify'
 
 function PostItem(props) {
+	const user = useUserStore(state=>state.user)
+	const token = useUserStore(state=>state.token)
+	const deletePost = usePostStore(state=>state.deletePost)
+	const getAllPosts = usePostStore(state=>state.getAllPosts)
 	const { post } = props
 	// console.log(post)
+
+	const hdlDelete = async () => {
+		try {
+			await deletePost(post.id,token)
+			toast.success('Delete done')
+			getAllPosts(token)
+		}catch(err){
+			const errMsg = err.response?.data?.error || err.message
+			toast.error(errMsg)
+			console.log(err)
+		}
+	}
 	return (
 		<div className="card bg-base-100 shadow-xl">
 			<div className="card-body p-3">
@@ -20,7 +39,7 @@ function PostItem(props) {
 						</div>
 					</div>
 					<div className="flex gap-2">
-						<div className="dropdown">
+						{ user.id === post.userId && (<div className="dropdown">
 							<div tabIndex={0} role='button'>
 								<div className="avatar items-center cursor-pointer">
 									<div className="w-10 h-10 rounded-full !flex justify-center items-center hover:bg-gray-200">
@@ -30,9 +49,10 @@ function PostItem(props) {
 							</div>
 							<ul tabIndex={0} className='dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow'>
 								<li><a>Edit</a></li>
-								<li><a>Delete</a></li>
+								<li onClick={hdlDelete}><a>Delete</a></li>
 							</ul>
-						</div>
+						</div>)
+						}
 						<div className="avatar items-center cursor-pointer">
 							<div className="w-10 h-10 rounded-full !flex justify-center items-center hover:bg-gray-200">
 								<CloseIcon className='w-6' />
@@ -61,13 +81,13 @@ function PostItem(props) {
 				<div className="divider h-0 my-0"></div>
 				<div className="flex gap-3 justify-between">
 					<div className="flex gap-3 justify-center items-center cursor-pointer hover:bg-gray-300 rounded-lg py-2 flex-1">
-						<LikeIcon className='w-6'/> Like
+						<LikeIcon className='w-6' /> Like
 					</div>
 					<div className="flex gap-3 justify-center items-center cursor-pointer hover:bg-gray-300 rounded-lg py-2 flex-1">
-						<CommentIcon className='w-8'/> Comment
+						<CommentIcon className='w-8' /> Comment
 					</div>
 					<div className="flex gap-3 justify-center items-center cursor-pointer hover:bg-gray-300 rounded-lg py-2 flex-1">
-						<ShareIcon className='w-6'/> Share
+						<ShareIcon className='w-6' /> Share
 					</div>
 				</div>
 				<div className="divider h-0 my-0"></div>

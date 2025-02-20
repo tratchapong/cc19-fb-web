@@ -9,9 +9,12 @@ const usePostStore = create( (set, get)=> ({
 		const rs = await axios.post('http://localhost:8899/post',body,{
 			headers : { Authorization : `Bearer ${token}` }
 		})
-		// set(state => ({
-		// 	posts: [ {...rs.data, user, likes :[], comments:[]}, ...state.posts ]
-		// }))
+		console.log(rs.data)
+		set(state => ({
+			posts: [ {...rs.data.result, user, likes :[], comments:[]}, ...state.posts ]
+		}))
+	
+		
 	},
 	getAllPosts : async (token) => {
 		set({loading: true})
@@ -19,6 +22,11 @@ const usePostStore = create( (set, get)=> ({
 			headers : { Authorization : `Bearer ${token}` }
 		})
 		set({posts : rs.data.posts, loading: false} )
+	},
+	deletePost : async (postId, token) => {
+		const rs = await axios.delete(`http://localhost:8899/post/${postId}`,{
+			headers : { Authorization : `Bearer ${token}`}
+		})
 	}
 }) )
 
