@@ -5,6 +5,7 @@ import CommentContainer from './CommentContainer'
 import useUserStore from '../stores/userStore'
 import usePostStore from '../stores/postStore'
 import { toast } from 'react-toastify'
+import TimeAgo from 'react-timeago'
 
 function PostItem(props) {
 	const user = useUserStore(state=>state.user)
@@ -12,8 +13,23 @@ function PostItem(props) {
 	const deletePost = usePostStore(state=>state.deletePost)
 	const getAllPosts = usePostStore(state=>state.getAllPosts)
 	const setCurrentPost = usePostStore(state=>state.setCurrentPost)
+	const createLike = usePostStore(state=>state.createLike)
+	const unLike = usePostStore(state=>state.unLike)
 	const { post } = props
-	// console.log(post)
+	// console.log(post.likes)
+
+	const haveLike = () => post.likes.findIndex(el=>el.userId === user.id) !== -1
+	const hdlLikeClick = async e => {
+		// if(post.userId === user.id) {
+		// 	return toast.info('Please not like your own post')
+		// }
+		if(haveLike()) {
+			await unLike(token, post.id)
+		}else {
+			await createLike(token, {postId : post.id})
+		}
+		getAllPosts(token)
+	}
 
 	const hdlDelete = async () => {
 		try {
@@ -40,7 +56,7 @@ function PostItem(props) {
 						<div className="flex flex-col">
 							<p className='font-bold text-sm'>{post.user.firstName} {post.user.lastName}</p>
 							<p className='text-xs opacity-70'>
-								{new Date(post.createdAt).toDateString()},{new Date(post.createdAt).toLocaleTimeString()}
+								<TimeAgo date={post.createdAt} />
 							</p>
 						</div>
 					</div>
@@ -86,7 +102,8 @@ function PostItem(props) {
 				</div>
 				<div className="divider h-0 my-0"></div>
 				<div className="flex gap-3 justify-between">
-					<div className="flex gap-3 justify-center items-center cursor-pointer hover:bg-gray-300 rounded-lg py-2 flex-1">
+					<div className={`flex gap-3 justify-center items-center cursor-pointer hover:bg-gray-300 rounded-lg py-2 flex-1
+						${haveLike() ? 'bg-blue-300 text-white' : ''} `} onClick={hdlLikeClick}>
 						<LikeIcon className='w-6' /> Like
 					</div>
 					<div className="flex gap-3 justify-center items-center cursor-pointer hover:bg-gray-300 rounded-lg py-2 flex-1">
@@ -97,7 +114,7 @@ function PostItem(props) {
 					</div>
 				</div>
 				<div className="divider h-0 my-0"></div>
-				<CommentContainer />
+				<CommentContainer postId={post.id} comments={post.comments}/>
 			</div>
 		</div>
 	)

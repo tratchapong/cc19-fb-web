@@ -19,11 +19,13 @@ function PostFormEdit(props) {
 	const [addPic, setAddPic] = useState(false)
 	const [file, setFile] = useState(null)
 	const [removePic, setRemovePic] = useState(false)
+	const [loading, setLoading] = useState(false)
 
 	// console.log(currentPost)
 
 	const hdlUpdatePost = async () => {
 		try {
+			setLoading(true)
 			const body = new FormData()
 			body.append('message', message)
 			if(file) {
@@ -39,11 +41,15 @@ function PostFormEdit(props) {
 			const errMsg = err.response?.data?.error || err.message
 			console.log(err)
 			toast.error(errMsg)
+		}finally{
+			setLoading(false)
 		}
 	}
 
 	return (
 		<div className='flex flex-col gap-2'>
+			{ loading && <span className="loading loading-dots loading-xs"></span>
+			}
 			<h3 className="text-xl text-center">Update post</h3>
 			<div className="divider mt-1 mb-0"></div>
 			<div className="flex gap-2">
