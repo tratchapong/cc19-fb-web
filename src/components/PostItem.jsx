@@ -26,7 +26,7 @@ function PostItem(props) {
 		if(haveLike()) {
 			await unLike(token, post.id)
 		}else {
-			await createLike(token, {postId : post.id})
+			await createLike( {postId : post.id}, token)
 		}
 		getAllPosts(token)
 	}

@@ -1,56 +1,41 @@
-import axios from 'axios'
-import {create} from 'zustand'
+import { create } from 'zustand'
+import { createComment, createLike, createPost, deletePost, getAllPosts, updatePost } from '../api/postApi'
 
-const usePostStore = create( (set, get)=> ({
-	posts : [],
-	currentPost : null,
-	loading : false,
-	createPost : async (body, token, user) => {
-		const rs = await axios.post('http://localhost:8899/post',body,{
-			headers : { Authorization : `Bearer ${token}` }
-		})
+const usePostStore = create((set, get) => ({
+	posts: [],
+	currentPost: null,
+	loading: false,
+	createPost: async (body, token, user) => {
+		const rs = await createPost(body, token)
 		console.log(rs.data)
 		set(state => ({
-			posts: [ {...rs.data.result, user, likes :[], comments:[]}, ...state.posts ]
-		}))	
+			posts: [{ ...rs.data.result, user, likes: [], comments: [] }, ...state.posts]
+		}))
 	},
-	getAllPosts : async (token) => {
-		set({loading: true})
-		const rs = await axios.get('http://localhost:8899/post',{
-			headers : { Authorization : `Bearer ${token}` }
-		})
-		set({posts : rs.data.posts, loading: false} )
+	getAllPosts: async (token) => {
+		set({ loading: true })
+		const rs = await getAllPosts(token)
+		set({ posts: rs.data.posts, loading: false })
 	},
-	deletePost : async (postId, token) => {
-		const rs = await axios.delete(`http://localhost:8899/post/${postId}`,{
-			headers : { Authorization : `Bearer ${token}`}
-		})
-		set(state=> ({
-			posts : state.posts.filter(post => post.id !== postId)
-		}))  
+	deletePost: async (postId, token) => {
+		const rs = await deletePost(postId, token)
+		set(state => ({
+			posts: state.posts.filter(post => post.id !== postId)
+		}))
 	},
-	setCurrentPost : (post) => set({currentPost : post}),
-	updatePost : async (postId, token, body) => {
-		const rs = await axios.put(`http://localhost:8899/post/${postId}`, body,{
-			headers : { Authorization : `Bearer ${token}`}
-		})
+	updatePost: async (postId, token, body) => {
+		const rs = await updatePost(postId, token, body)
 	},
-	createComment : async (body, token) => {
-		const rs = await axios.post('http://localhost:8899/comment' ,body, {
-			headers : { Authorization : `Bearer ${token}`}	
-		})	
+	createComment: async (body, token) => {
+		const rs = await createComment(body, token)
 	},
-	createLike : async (token, body) => {
-		const rs = await axios.post('http://localhost:8899/like', body, {
-			headers : { Authorization : `Bearer ${token}`}	
-		})
+	createLike: async (body, token) => {
+		const rs = await createLike(body, token)
 	},
-	unLike : async  (token, id) => {
-		const rs = await axios.delete(`http://localhost:8899/like/${id}`, {
-			headers : { Authorization : `Bearer ${token}`}	
-		})
+	unLike: async (token, id) => {
+		const rs = await unLike(token, id)
 	},
-
-}) )
+	setCurrentPost: (post) => set({ currentPost: post }),
+}))
 
 export default usePostStore
